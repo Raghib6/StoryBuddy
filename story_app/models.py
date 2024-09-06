@@ -8,6 +8,7 @@ class Story(MPTTModel):
     title = models.CharField(max_length=150, unique=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     details = models.TextField(null=True,blank=True)
+    views = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class MPTTMeta:

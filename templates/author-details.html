@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stories Tree</title>
+    <style>
+        .mptt-tree {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .mptt-tree li {
+            margin: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .mptt-tree li::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 10px;
+            height: 1px;
+            background-color: #ccc;
+        }
+
+        .mptt-tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 100%;
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-2 d-flex align-items-start">
+            <div class="card w-100 shadow-sm">
+                <div class="card-body text-center text-warning">
+                    <h5 class="card-title mb-3">{{ author.username }}</h5>
+                    <p class="mt-2 mb-1 text-dark">Total Stories: {{ total_stories }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10 d-flex align-items-start">
+            <div class="card w-100">
+                <div class="card-body">
+                    <h3 class="card-title">All Stories</h3>
+                    <hr>
+                    <ul class="mptt-tree">
+                        {% recursetree stories %}
+                            <li>
+                                {% if node.is_root_node %}
+                                    <h6><span class="text-primary">{{ node.title }}</span> ---> <span class="text-danger">({{ node.views }}) </span>views</h6>
+                                {% else %}
+                                    {{ node.title }}  ({{ node.views }} views)
+                                {% endif %}
+                                
+                                {% if not node.is_leaf_node %}
+                                    <ul>
+                                        {{ children }}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endrecursetree %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
